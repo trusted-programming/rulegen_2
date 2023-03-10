@@ -40,6 +40,7 @@ class RuleDataProcessor():
             
     def load_data(self):
         f = open(self.data_path)
+        print(self.data_path)
         data = json.load(f)
 
         # with open(self.data_path, "r") as f1:
@@ -53,8 +54,8 @@ class RuleDataProcessor():
 
             source = sample["before"] + "<unk>" + sample["context"]
             target = sample["after"]
-            
-            data_tuple = (str(i), source, sample["after"])
+
+            data_tuple = (i, source, sample["after"])
             data_tuples.append(data_tuple)
             
         with concurrent.futures.ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()-5) as executor:
