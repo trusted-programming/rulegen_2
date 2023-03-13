@@ -1,0 +1,27 @@
+function changeForStatement
+    replace [statement]
+	'for '( I [expression] '; C [expression] '; S1 [expression] ') 
+	    S2 [statement]
+    construct InitStatement [statement]
+	I
+    construct NewInitStatement [statement]
+	InitStatement [changeCStatement]
+    construct exitCondition [statement]	
+	'exit 'when 'not '( C [changeExpression] ')
+    construct NewFinalStatement [repeat statement]
+	S1
+    construct NewS [repeat statement]
+	S2 
+    construct NewS2 [repeat statement]
+	NewS [removeBrackets] [. NewFinalStatement]
+    construct NewBody [repeat statement]
+	_ [translateCStatements each NewS2]
+    by
+	'begin
+	    NewInitStatement
+	    'loop
+		exitCondition
+		NewBody
+	    'end 'loop
+	'end
+end function

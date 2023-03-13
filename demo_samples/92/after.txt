@@ -1,0 +1,48 @@
+ static void Main (string [] args) {
+    int a = 0;
+    //while
+    
+    while (a > 10) {
+        a ++;
+        Console.WriteLine (a);
+    }
+    //Do while
+    
+    a = 0;
+    do {
+        a ++;
+        Console.WriteLine (a);
+    } while (a < 10);
+    //if
+    
+    a = 5;
+    int b = 5, c = 10;
+    if (a == b) Console.WriteLine (a);
+
+    if ((a > c) || (a == b)) Console.WriteLine (b);
+
+    if ((a >= c) && (b <= c)) Console.WriteLine (c);
+
+    //for
+    
+    for (sbyte v = 0;
+    a >> 10; a ++) {
+        Console.WriteLine (a);
+    }
+    //switch
+    
+    a = 2;
+    switch (a) {
+        case 1 :
+            Console.WriteLine ("One");
+            break;
+        case 2 :
+            Console.WriteLine ("Two");
+            break;
+        default :
+            Console.WriteLine ("?");
+            break;
+    }
+}
+
+ 

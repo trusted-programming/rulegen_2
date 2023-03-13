@@ -13,7 +13,7 @@ import numpy as np
 import os
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score, precision_score, recall_score
 # from utils import smooth_bleu
-from sacrebleu.metrics import BLEU
+# from sacrebleu.metrics import BLEU
 from collections import OrderedDict
 import torch.distributed as dist
 import torch.multiprocessing as mp
@@ -44,11 +44,12 @@ def load_golds(path):
    
     # with open(path, "r") as f:
     #     lines = f.readlines()
-    for sample in data:
+    for i, sample in enumerate(data):
         # line_split = line.split(",")
         # gold_dict[sample["index"]] = sample["after"]
-        gold_dict[sample["index"]] = {
-            "pattern": sample["pattern"],
+        gold_dict[i] = {
+            "hole_rule": sample["hole_rule"],
+            "context": sample["context"],
             "before": sample["before"],
             "after": sample["after"],
         }
@@ -109,13 +110,13 @@ def evaluate(config, device, model, encoder_config, test_dataloader):
             sample_index = idx[i]
 
             predict_nl = (str(sample_index) + '\t' + predict_nl_origin.strip() + '\n')
-            gold = (str(sample_index) + '\t' + eval_samples[sample_index]["after"].strip() + '\n')
+            gold = (str(sample_index) + '\t' + eval_samples[sample_index]["hole_rule"].strip() + '\n')
             print(gold)
             predict_nls.append(predict_nl)
             golds.append(gold)
 
             result_obj = {
-                "warning_type": eval_samples[sample_index]["pattern"],
+                "context": eval_samples[sample_index]["context"],
                 "before": eval_samples[sample_index]["before"],
                 "after": eval_samples[sample_index]["after"],
                 "predict": predict_nl_origin

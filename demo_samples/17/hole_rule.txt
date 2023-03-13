@@ -1,0 +1,10 @@
+function setDefaultAccess
+	replace [repeat modifier]
+		Modifiers [repeat modifier]
+		construct ModifiersLength[number]
+			_[length Modifiers]
+	where
+		ModifiersLength[< 1]
+	by
+		'internal	
+	end function

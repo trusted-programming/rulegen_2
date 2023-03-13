@@ -1,0 +1,6 @@
+function changeReturn
+	replace*[statement]
+		'return ReturnExp[opt expression] ';
+	by
+		'return ReturnExp[changeOptExpression] ';
+end function

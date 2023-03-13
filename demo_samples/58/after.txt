@@ -1,0 +1,7 @@
+ try {
+    lock (Class.forName ("BumpTest")) {
+        classCount ++;
+    }
+} catch (System.Exception e) {
+}
+ 

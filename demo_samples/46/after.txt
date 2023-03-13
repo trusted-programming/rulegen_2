@@ -1,0 +1,2 @@
+ set result [expr {+1}]
+ 

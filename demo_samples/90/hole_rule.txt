@@ -1,0 +1,6 @@
+rule theorem8
+    replace [formula]
+        ( ( - R [formula] '| - P [formula] ) '| - ( - P '| - R ) ) 
+    by
+        true
+end rule

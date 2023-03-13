@@ -1,0 +1,14 @@
+ types Jim;
+    c == 5;
+    d == 12;
+    e == 65;
+    T = (x : int;);
+    S = (x : string;);
+    TV1 = [5] char;
+    TV = TV1;
+    LTV1 = (x : TV1; y : TV1;);
+    LTV = LTV1;
+    LTVE = LTV1;
+    MT = (x : int; y : LTV1; z : boolean; a : [65] char;);
+end Jim.
+ 

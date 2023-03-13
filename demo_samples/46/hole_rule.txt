@@ -1,0 +1,20 @@
+function complexRefAssignment Ref [reference]
+    deconstruct Ref
+	Id [id] Dim [repeat dimension] Comps [repeat component+] 
+    replace [repeat tcl_expr_more]
+	Expr [repeat tcl_expr_more]
+    construct ExprLen [number]
+	_ [length Expr]
+    where not
+	ExprLen [> 0]
+    deconstruct * Comps
+	'. VarId [id]
+    construct CompsLen [number]
+	_ [length Comps] [- 1]
+    construct NewComps [repeat component]
+	Comps [head CompsLen]
+    construct NewRef [reference]
+	Id Dim NewComps
+    by
+	NewRef 'set VarId 
+end function

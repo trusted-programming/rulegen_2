@@ -1,0 +1,69 @@
+function loopLift Body [repeat declaration_or_statement] Assignment [declaration_or_statement]
+    deconstruct Assignment
+        X [id] := E [expn]
+
+    % Construct a list of the identifiers used in the expression
+    construct IdsInExpression [repeat id]
+        _ [^ E]
+
+    % Replace the loop and its contents
+    replace [repeat declaration_or_statement]
+        Loop [repeat declaration_or_statement]
+
+    % Can only lift the assignment if all the identifiers in its
+    % expression are not assigned in the loop ...
+    where not
+        Loop [assigns each IdsInExpression]
+
+    % ... and X is assigned only once
+    deconstruct * Body
+        X := E
+        Rest [repeat declaration_or_statement]
+    where not
+        Rest [assigns X]
+
+    % ... and the the effect of it does not wrap around the loop
+    construct PreContext [repeat declaration_or_statement]
+        Body [deleteAssignmentAndRest X]
+    where not 
+        PreContext [refers X]
+
+    % Now lift the assignment
+    by
+        Assignment
+        Loop [deleteAssignment Assignment]
+end function
+
+
+
+function deleteAssignment Assignment [declaration_or_statement]
+    replace * [repeat declaration_or_statement]
+        Assignment
+        Rest [repeat declaration_or_statement]
+    by
+        Rest
+end function
+
+function deleteAssignmentAndRest X [id]
+    replace * [repeat declaration_or_statement]
+        X := E [expn]
+        Rest [repeat declaration_or_statement]
+    by
+        % nada
+end function
+
+function assigns Id [id]
+    match * [assignment_statement]
+        Id FieldsOrSubscripts [repeat component_selector] := Expn [expn]
+end function
+
+function refers Id [id]
+    match * [id]
+        Id
+end function
+
+function isAssignment
+    match [declaration_or_statement]
+        AS [assignment_statement]
+end function
+

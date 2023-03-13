@@ -1,0 +1,29 @@
+function expressionTransforms
+    replace [program]
+	P [program]
+    by
+	P [arrayDeclReplace]
+	  [arrayDeclAssReplace]
+	  [arrayInitReplace]
+
+	  [newClassExprNoParam]
+	  [newClassExprParams]
+
+	  [transformWhile]
+	  [transformDoWhile]
+
+	  [transformIf]
+	  [transformElseIfToElif]
+
+	  [transformSwitchWith1DefaultToIfs]
+	  [transformEmptySwitch]
+	  [transformSwitchToIfs]
+
+	  [transformFinally]
+	  [transformCatchTyped]
+	  [transformTry]
+
+	  [transformThrow]
+
+	  [transformForeachToForin]
+end function

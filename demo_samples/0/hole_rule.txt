@@ -1,0 +1,8 @@
+function changeFor
+	replace*[statement]
+		'for '( InitExp[for_init] ForExp[for_expression]UpdateExp [for_update] ')
+        		Stmts[statement]    
+	by
+		'for '( InitExp[checkLocalVars][changeExpression] ForExp[changeExpression]UpdateExp [changeExpression] ')
+        		Stmts[translateStatement][translateBlock]  	
+end function

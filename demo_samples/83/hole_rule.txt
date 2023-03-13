@@ -1,0 +1,6 @@
+rule containProtected
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isProtected]
+end rule

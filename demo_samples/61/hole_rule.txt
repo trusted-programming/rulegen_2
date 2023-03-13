@@ -1,0 +1,9 @@
+function changePrimDataTypes
+	replace [primitive_type]
+		JavaType[primitive_type]
+		import PrimDataTypesMapping [DataMapper]
+		deconstruct * [primitiveTable] PrimDataTypesMapping
+			JavaType -> CSType [primitive_type]
+	by
+		CSType
+end function

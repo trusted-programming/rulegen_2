@@ -1,0 +1,11 @@
+function changeToBase ConBody[constructor_body]
+	deconstruct ConBody
+	'{
+	    'super args[repeat component] ';
+	    Remaining[repeat declaration_or_statement]
+	'}
+	replace [constructor_declarator]
+	   Name[class_name] '( FormalParms[list formal_parameter] ')
+	by
+	  Name '( FormalParms ')': 'base args
+end function

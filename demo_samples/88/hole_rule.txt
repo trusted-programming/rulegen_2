@@ -1,0 +1,7 @@
+function translateMemberDeclaration
+	replace*[member_declaration]
+		Member[member_declaration]
+	by
+		Member[translateTypeDecl]%2 static nested types only	
+		      %[translateMethodConstructor] 1 
+end function

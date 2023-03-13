@@ -1,0 +1,16 @@
+function changeClassBody
+replace [class_body]
+	'{                                   
+		ClassBodyDecls[repeat class_body_declaration]    
+   	'} optSemiColon[opt ';]          
+	export InitCalls[repeat declaration_or_statement]
+		_%empty one
+	by
+	'{	
+		 ClassBodyDecls[translateFieldDeclaration]
+		 	       [translateInstanceInit]
+		 	       [translateStaticInit]
+		 	       [translateBodyMembers]
+		 	        	
+	'}optSemiColon
+end function

@@ -1,0 +1,30 @@
+function addCallsToSuper
+	replace*[repeat class_body_declaration]
+		Modifiers[repeat modifier] 
+		ConDeclar[constructor_declarator] 
+		ThrowsClause[opt throws] 
+		ConBody[constructor_body]
+		Remaining[repeat class_body_declaration]
+	%  does the constructor calls its base class?
+	where ConBody[containSuper][containThis]
+		% yes by a call to this or super
+		deconstruct ConBody
+		'{
+		       SuperCallStmt [declaration_or_statement]
+		       RemainingStmts[repeat declaration_or_statement]
+		'}
+		% all initialMethods calls
+		import InitCalls [repeat declaration_or_statement]
+		% join the methods calls within the constructor body
+		construct NewBlock[repeat declaration_or_statement]
+			InitCalls [. RemainingStmts]
+	by
+		% the constructor again in the new look
+		Modifiers ConDeclar ThrowsClause 
+		'{
+			% a call to base class must be the first stmt	      
+		       SuperCallStmt
+		       NewBlock
+		'}
+		Remaining[addCallsToSuper]
+end function

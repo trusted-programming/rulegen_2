@@ -1,0 +1,6 @@
+rule containFinal
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+end rule

@@ -1,0 +1,36 @@
+
+protected boolean method2 () {
+    return true;
+}
+
+public final int method3 () {
+    return 0;
+}
+
+abstract protected void method4 ();
+
+abstract void method5 ();
+
+//constructor
+
+//constructor with arrays
+
+
+Methods (byte a []) {
+}
+
+public Methods () {
+}
+
+//arrays within methods
+
+
+public void swap (int a [], int b [], boolean f []) {
+}
+
+public static void main (String args []) {
+    // Your code goes here
+    
+}
+
+ 

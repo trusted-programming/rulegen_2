@@ -1,0 +1,48 @@
+
+static void Main (string [] args) {
+    int a = 0;
+    //while
+    
+    while (a > 10) {
+        a ++;
+        System.out.println (a);
+    }
+    //Do while
+    
+    a = 0;
+    do {
+        a ++;
+        System.out.println (a);
+    } while (a < 10);
+    //if
+    
+    a = 5;
+    int b = 5, c = 10;
+    if (a == b) System.out.println (a);
+
+    if ((a > c) || (a == b)) System.out.println (b);
+
+    if ((a >= c) && (b <= c)) System.out.println (c);
+
+    //for
+    
+    for (byte v = 0;
+    a >>> 10; a ++) {
+        System.out.println (a);
+    }
+    //switch
+    
+    a = 2;
+    switch (a) {
+        case 1 :
+            System.out.println ("One");
+            break;
+        case 2 :
+            System.out.println ("Two");
+            break;
+        default :
+            System.out.println ("?");
+    }
+}
+
+ 

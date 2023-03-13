@@ -1,0 +1,16 @@
+rule transformBooleanTrue
+    replace [literal]
+	'true
+    by
+	'True
+end rule
+
+
+
+rule transformLiteralNull
+    replace [literal]
+	'null
+    by
+	'None
+end rule
+

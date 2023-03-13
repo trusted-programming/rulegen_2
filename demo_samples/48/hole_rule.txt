@@ -1,0 +1,10 @@
+function changeExtend 
+	replace [opt extends_clause]
+		'extends Enames[list type_name+] 
+		construct AllNames[repeat qualified_name]
+			 _[^ Enames]
+		construct NewListEnames[list qualified_name]
+			 _[toQualifiedName each AllNames]
+	by
+		': NewListEnames
+end function

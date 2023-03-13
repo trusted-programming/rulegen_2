@@ -1,0 +1,6 @@
+ public static void Main (String [] args) {
+    Outer outer = new Outer ();
+    outer.test ();
+}
+
+ 

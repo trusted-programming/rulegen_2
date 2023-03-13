@@ -1,0 +1,4 @@
+function isFinal
+	match [modifier]
+		'final
+end function

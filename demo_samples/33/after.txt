@@ -1,0 +1,11 @@
+ begin
+    i := 0
+    loop
+        exit when not (i < n)
+        if a (i) > m then
+            m := a (i)
+        end if
+        i := i + 1
+    end loop
+end
+ 

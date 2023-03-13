@@ -1,0 +1,10 @@
+
+InstanceInit2 () {
+    super ();
+    initialMethod1 ();
+    initialMethod2 ();
+    boolean flag = false;
+    byte b;
+}
+
+ 

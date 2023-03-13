@@ -1,0 +1,4 @@
+
+abstract protected void method4 ();
+
+ 

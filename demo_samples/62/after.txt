@@ -1,0 +1,20 @@
+ class Client : Object, Callback {
+    // Implement Callback's interface
+    
+
+    virtual public void callback (int p) {
+        Console.WriteLine ("callback called with " + p);
+    }
+
+}
+
+class TestIface {
+
+    public static void Main (String [] args) {
+        Callback c = new Client ();
+        c.callback (42);
+    }
+
+}
+
+ 

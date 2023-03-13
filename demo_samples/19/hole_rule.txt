@@ -1,0 +1,6 @@
+function changeBreakStatement
+    replace [statement]
+	'break ';
+    by
+	'exit
+end function

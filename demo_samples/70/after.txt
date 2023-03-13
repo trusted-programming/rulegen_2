@@ -1,0 +1,25 @@
+ public static void Main (String [] args) {
+    try {
+        Console.WriteLine ("NullPointerException example");
+        test (null);
+    } catch (NullReferenceException npe) {
+    }
+    try {
+        Console.WriteLine ("NumberFormatException example");
+        Integer inum = new Integer ("36.5");
+        // format problem
+        
+    } catch (System.Exception nfe) {
+    }
+    try {
+        Console.WriteLine ("ArithmeticException Example");
+        int a = 100;
+        a /= 0;
+    } catch (ArithmeticException ae) {
+    }
+    Console.WriteLine ("ArrayStoreException Example");
+    Integer [] a = new Integer [3];
+    storeItem (a, 2, new String ("abc"));
+}
+
+ 

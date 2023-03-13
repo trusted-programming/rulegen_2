@@ -1,0 +1,8 @@
+function translateStatementInBlock
+	replace*[repeat declaration_or_statement]
+		Stmnt[statement]
+		Remaining[repeat declaration_or_statement]
+	by
+		Stmnt[translateStatement]
+		Remaining[translateStatementInBlock]
+end function

@@ -1,0 +1,11 @@
+function changeFieldArrayDimensions 
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		DataType[type_name]
+		VarName[declared_name]Dim [repeat dimension]VarInit [opt equals_variable_initializer];
+	% data type first and [] follows
+	construct NewTypeSpecifier[type_specifier]
+		DataType Dim
+	by
+		Modifiers NewTypeSpecifier VarName VarInit ;
+end function

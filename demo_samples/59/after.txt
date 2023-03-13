@@ -1,0 +1,10 @@
+ class TestIface {
+
+    public static void Main (String [] args) {
+        Callback c = new Client ();
+        c.callback (42);
+    }
+
+}
+
+ 

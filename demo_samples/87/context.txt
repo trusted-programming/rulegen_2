@@ -1,0 +1,170 @@
+function checkPrimitiveConstants
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where Modifiers[containFinal]
+	where FirstVarDecl[isCompileTime]
+	by
+		Modifiers[removeStatic][finalToConst]
+			 [removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes]
+		VarDecl ;	
+end function
+
+function checkRunTimeConstants
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarator];
+	where Modifiers[containFinal]
+	where not VarDecl[isCompileTime]
+	by
+		Modifiers[finalToReadOnly][removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes]
+		VarDecl ;	
+end function
+
+function checkVar
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where not Modifiers[containFinal]
+	by
+		Modifiers[removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes]
+		VarDecl ;	
+end function
+
+function changeFieldArrayDimensions 
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		DataType[type_name]
+		VarName[declared_name]Dim [repeat dimension]VarInit [opt equals_variable_initializer];
+	% data type first and [] follows
+	construct NewTypeSpecifier[type_specifier]
+		DataType Dim
+	by
+		Modifiers NewTypeSpecifier VarName VarInit ;
+end function
+
+function changeArrayDimensions 
+	replace[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		DataType[type_name]
+		VarName[declared_name]Dim [repeat dimension]VarInit [opt equals_variable_initializer];
+	construct NewTypeSpecifier[type_specifier]
+		DataType Dim
+	by
+		Modifiers NewTypeSpecifier VarName VarInit ;
+end function
+
+function changeDataTypes
+	replace[type_specifier]
+		DataType[primitive_type]
+	by
+		DataType[changePrimDataTypes]
+end function
+
+function changeArrayTypes
+	replace[type_specifier]
+		ArrayType[type_name] Dimentions[repeat dimension+]
+		deconstruct *[primitive_type] ArrayType
+			PrimType[primitive_type]
+	by
+		PrimType[changePrimDataTypes]Dimentions
+end function
+
+function changeProtected
+	replace * [ repeat modifier]
+		'protected
+	by
+		'internal 'protected
+end function
+
+function isCompileTime
+	match[variable_declarator]
+		VarName[variable_name] '= Value[literal]
+end function
+
+function finalToConst
+	replace *[repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+	by 
+		'const
+		RemainingModifiers
+end function
+
+rule containFinal
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+end rule
+
+rule removeStatic
+	replace [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isStatic]
+	by
+	   RemainingModifiers
+end rule
+
+rule removeNonCSModifiers
+	replace [repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isTransient][isVolatile]
+	by
+		RemainingModifiers
+end rule
+
+function finalToReadOnly
+	replace *[repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+	by 
+		'readonly
+		RemainingModifiers
+end function
+
+function changePrimDataTypes
+	replace [primitive_type]
+		JavaType[primitive_type]
+		import PrimDataTypesMapping [DataMapper]
+		deconstruct * [primitiveTable] PrimDataTypesMapping
+			JavaType -> CSType [primitive_type]
+	by
+		CSType
+end function
+
+function isFinal
+	match [modifier]
+		'final
+end function
+
+function isStatic
+	match [modifier]
+		'static
+end function
+
+function isTransient
+	match [modifier]
+		'transient
+end function
+
+
+

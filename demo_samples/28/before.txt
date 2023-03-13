@@ -1,0 +1,17 @@
+
+InstanceInit1 () {
+    initialMethod1 ();
+    initialMethod2 ();
+}
+
+private void initialMethod1 () {
+    int tmp = 1;
+    int x = 2;
+    int y = 10;
+}
+
+private void initialMethod2 () {
+    boolean flag = false;
+}
+
+ 

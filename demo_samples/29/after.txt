@@ -1,0 +1,16 @@
+ {
+    //J2C# Unsupported:Interface field must be removed manually
+    int NO = 0;
+    //J2C# Unsupported:Interface field must be removed manually
+    int YES = 1;
+    //J2C# Unsupported:Interface field must be removed manually
+    int MAYBE = 2;
+    //J2C# Unsupported:Interface field must be removed manually
+    int LATER = 3;
+    //J2C# Unsupported:Interface field must be removed manually
+    int SOON = 4;
+    //J2C# Unsupported:Interface field must be removed manually
+    int NEVER = 5;
+}
+
+ 

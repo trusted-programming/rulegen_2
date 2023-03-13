@@ -1,0 +1,9 @@
+function changeSwitchStmts
+replace*[repeat switch_alternative]
+	  	Label[switch_label]  Stmts[repeat declaration_or_statement] 
+		RemainingSwitchAlters [repeat switch_alternative]
+	by
+		Label  Stmts[translateStatementInBlock] 
+		RemainingSwitchAlters[changeSwitchStmts] 
+
+end function

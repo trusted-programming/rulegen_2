@@ -1,0 +1,49 @@
+
+// Method implicitly throws an exception
+
+
+String readUpTo (char terminator) throws IOException {
+    String s = new String ();
+    while (true) {
+        int c = read ();
+        // Can throw IOException
+        
+        if (c == - 1 || c == terminator) return s.toString ();
+
+        s = s + c;
+    }
+}
+
+// Method catches an exception internally
+
+
+int getLength () {
+    String s;
+    try {
+        s = readUpTo (':');
+    } catch (IOException e) {
+        return 0;
+    }
+    return s.length ();
+}
+
+// Method can throw a RuntimeException
+
+
+int getAvgLength () {
+    int count = 0;
+    int total = 0;
+    int len;
+    while (true) {
+        len = getLength ();
+        if (len == 0) break;
+
+        count ++;
+        total += len;
+    }
+    return total / count;
+    // Can throw ArithmeticException
+    
+}
+
+ 

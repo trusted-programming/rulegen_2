@@ -1,0 +1,6 @@
+ static String initInstance () {
+    Console.WriteLine ("Initializing instance variable");
+    return "instance";
+}
+
+ 

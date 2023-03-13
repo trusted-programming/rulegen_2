@@ -1,0 +1,4 @@
+function isTransient
+	match [modifier]
+		'transient
+end function

@@ -1,0 +1,4 @@
+function isPrivate
+	match [modifier]
+		'private
+end function

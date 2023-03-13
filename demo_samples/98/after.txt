@@ -1,0 +1,33 @@
+ package require XOTcl
+namespace import ::xotcl::*
+
+Class create PrePostDemo_metapapa -superclass {Class} -slots {
+
+}
+
+PrePostDemo_metapapa create PrePostDemo -superclass {Class} -slots {
+
+}
+
+PrePostDemo proc main {args} {
+    set i 3
+    incr i
+    puts $i
+    // "4"
+    
+    incr i
+    puts $i
+    // "5"
+    
+    puts [incr i]
+    // "6"
+    
+    puts [incr i]
+    // "6"
+    
+    puts $i
+    // "7"
+    
+}
+
+ 

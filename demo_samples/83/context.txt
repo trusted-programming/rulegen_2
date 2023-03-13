@@ -1,0 +1,76 @@
+function addPublic
+	replace [repeat modifier]
+		Modifiers[repeat modifier]
+	where not Modifiers[containPublic][containPrivate][containProtected] 
+	by
+	   'public 
+	    Modifiers
+end function
+
+rule containFinal
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+end rule
+
+rule containAbstract
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isAbstract]
+end rule
+
+rule containPrivate
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isPrivate]
+end rule
+
+rule containStatic
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isStatic]
+end rule
+
+rule containPublic
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isPublic]
+end rule
+
+
+
+function isFinal
+	match [modifier]
+		'final
+end function
+
+function isAbstract
+	match [modifier]
+		'abstract
+end function
+
+function isPrivate
+	match [modifier]
+		'private
+end function
+
+function isStatic
+	match [modifier]
+		'static
+end function
+
+function isPublic
+	match [modifier]
+		'public
+end function
+
+function isProtected
+	match [modifier]
+		'protected
+end function
+

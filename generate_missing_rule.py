@@ -13,7 +13,7 @@ import numpy as np
 import os
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score, precision_score, recall_score
 # from utils import smooth_bleu
-from sacrebleu.metrics import BLEU
+# from sacrebleu.metrics import BLEU
 from collections import OrderedDict
 import torch.distributed as dist
 import torch.multiprocessing as mp
@@ -40,17 +40,17 @@ if __name__ == "__main__":
     # Instantiate the argument parser
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--before", type=str,
+    parser.add_argument("--before_path", type=str,
                         help="Original code snippet")
     
-    parser.add_argument("--after", type=str,
+    parser.add_argument("--after_path", type=str,
                         help="Transformed code snippet")
     
-    parser.add_argument("--context", type=str,
+    parser.add_argument("--context_path", type=str,
                         help="Context of existing rules")
 
-    parser.add_argument("--target_path", type=str,
-                        help='Path to save the missing rule')
+    # parser.add_argument("--missing_rule_path", type=str,
+    #                     help='Path to save the missing rule')
 
     # before is A
     # after is B
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     os.environ['CUDA_VISIBLE_DEVICES'] = "0,1,2,3,4,5,6,7"
     local_rank = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    config_ini_path = "config/config.ini"
+    config_ini_path = "config/t5_config.ini"
     configs = configparser.ConfigParser()
     configs.read(config_ini_path)
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     tokenizer = tokenizer_class.from_pretrained(config["tokenizer_name"])
 
 
-    model = T5RuleGenerationModel(encoder=pretrained_model, config=encoder_config, tokenizer=tokenizer, 
+    model = T5RuleGenerationModel(t5_model=pretrained_model, config=encoder_config, tokenizer=tokenizer, 
                                 batch_size=config.getint("batch_size"), 
                                 max_source_length=config.getint("max_source_length"), 
                                 max_target_length=config.getint("max_target_length"), 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     
     model.to(local_rank)
 
-    existing_model_checkpoint = config["pretrained_rulegen_model_path"]
+    existing_model_checkpoint = config["pretrained_model_path"]
     
     if os.path.exists(existing_model_checkpoint):
         logger.info("*** Resume training from checkpoints ***")
@@ -102,23 +102,26 @@ if __name__ == "__main__":
         model.load_state_dict(new_state_dict)
 
 
-        with open(args.source_path, "r") as f1:
-            source = f1.read()
-
-        with open(args.target_path, "r") as f2:
-            target = f2.read()
-
-        source = " ".join(source.split())
-        target = " ".join(target.split())
+        with open(args.before_path, "r") as f1:
+            before = f1.read()
         
-        rust_input = f"{source} <unk> {target}"
+        with open(args.after_path, "r") as f2:
+            after = f2.read()
+
+        with open(args.context_path, "r") as f3:
+            context = f3.read()
+
+        # source = " ".join(source.split())
+        # target = " ".join(target.split())
+        
+        source_input = f"{before} <unk> {after} <unk> {context}"
         # print(rust_input)
-        rust_input_ids = tokenizer.encode(rust_input, max_length=config.getint("max_source_length"), padding='max_length', truncation=True)
+        source_input_ids = tokenizer.encode(source_input, max_length=config.getint("max_source_length"), padding='max_length', truncation=True)
         # print(rust_input_ids)
-        rust_input_ids = torch.tensor([rust_input_ids])
-        rust_input_ids = rust_input_ids.to(local_rank)
+        source_input_ids = torch.tensor([source_input_ids])
+        source_input_ids = source_input_ids.to(local_rank)
         
-        predict_ids = model(rust_input_ids=rust_input_ids, generate_txl=True)
+        predict_ids = model(source_ids=source_input_ids, generate_target=True)
         # print(predict_ids)
         predict_nl = tokenizer.decode(predict_ids[0], skip_special_tokens=True, clean_up_tokenization_spaces=False)
 

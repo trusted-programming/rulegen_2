@@ -1,0 +1,6 @@
+rule inference1a
+    replace [formula]
+        - ( - S [formula] '| - ( - S '| R [formula] ) ) 
+    by
+        R
+end rule

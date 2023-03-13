@@ -1,0 +1,8 @@
+function changeConstructorDeclarator
+	replace [constructor_declarator]
+	   Name[class_name] '( FormalParms[list formal_parameter]') %Init[opt constructor_initializer]  
+	   construct NewFormalParms[list formal_parameter]
+		_[changeFormalParamsDataTypes each FormalParms ]
+	by
+	   Name '( NewFormalParms')%Init
+end function

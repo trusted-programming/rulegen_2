@@ -1,0 +1,20 @@
+function partition N [id]
+    replace [range] 
+        Left [id *] Pivot [id] Right [id *]
+    by 
+        Left [toLeft Pivot N] 
+        Pivot 
+        Right [toRight Pivot N]
+end function
+
+
+
+function toRight Pivot [id] N [id]
+    where not 
+        N [< Pivot]
+    replace [id *] 
+        List [id *]
+    by 
+        N List
+end function
+

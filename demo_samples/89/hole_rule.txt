@@ -1,0 +1,11 @@
+rule mergeVariableDeclarations
+    replace [repeat declaration]
+        VAR VarDeclaration1 [repeat variable_declaration_semi]
+        VAR VarDeclaration2 [repeat variable_declaration_semi]
+
+    construct NewVarDeclaration [repeat variable_declaration_semi]
+        VarDeclaration1 [. VarDeclaration2] 
+                        [mergeIdentLists]
+    by
+        VAR NewVarDeclaration
+end rule

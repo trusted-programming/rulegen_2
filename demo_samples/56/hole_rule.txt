@@ -1,0 +1,8 @@
+function changeBreak
+	replace*[statement]
+		BreakStmt[break_statement]
+	deconstruct BreakStmt
+		'break LabelName[reference]';
+	by
+		BreakStmt[$ 'break 'goto]%'goto LabelName ';
+end function

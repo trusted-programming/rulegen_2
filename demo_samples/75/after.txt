@@ -1,0 +1,14 @@
+ class ColoredPoint : Point {
+    const int WHITE = 0, BLACK = 1;
+    int color;
+
+    internal ColoredPoint (int x, int y) : this (x, y, WHITE) {
+    }
+
+    internal ColoredPoint (int x, int y, int color) : base (x, y) {
+        this.color = color;
+    }
+
+}
+
+ 

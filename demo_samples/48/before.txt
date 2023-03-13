@@ -1,0 +1,21 @@
+
+// Method can throw a RuntimeException
+
+
+int getAvgLength () {
+    int count = 0;
+    int total = 0;
+    int len;
+    while (true) {
+        len = getLength ();
+        if (len == 0) break;
+
+        count ++;
+        total += len;
+    }
+    return total / count;
+    // Can throw ArithmeticException
+    
+}
+
+ 

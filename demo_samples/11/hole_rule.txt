@@ -1,0 +1,8 @@
+function changeTry
+	replace*[statement]
+		'try TryBlock[block] Catches[repeat catch_clause] Finally[opt finally_clause]
+	construct NewCatches[repeat catch_clause]
+		_[changeCatch each Catches]
+	by
+		'try TryBlock[translateBlock] NewCatches Finally[changeFinally]
+end function

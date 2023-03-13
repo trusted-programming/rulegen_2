@@ -1,0 +1,9 @@
+function changeProtected
+	replace * [ repeat modifier]
+		'protected
+	by
+		'internal 'protected
+end function
+
+
+

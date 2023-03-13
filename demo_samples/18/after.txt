@@ -1,0 +1,14 @@
+ // object reference as constant 
+
+readonly Object v = new Object ();
+// uninitialized final 
+
+readonly float f;
+
+internal FieldDeclaration () {
+    // unitialized final variable must be initialized in constructor
+    
+    f = 17.21f;
+}
+
+ 

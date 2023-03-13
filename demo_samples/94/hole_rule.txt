@@ -1,0 +1,8 @@
+rule removeNonCS
+	replace [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal][isTransient][isVolatile]
+	by
+	   RemainingModifiers
+end rule

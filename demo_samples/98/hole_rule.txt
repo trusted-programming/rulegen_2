@@ -1,0 +1,7 @@
+rule transformDefaultAttributes
+    replace [field_declaration]
+	_ [repeat modifier] _ [type_specifier] Name [id] _ [opt generic_parameter] 
+	'= Literal [literal] '; 
+    by
+	'Attribute Name '-default Literal 
+end rule

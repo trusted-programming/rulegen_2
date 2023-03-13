@@ -1,0 +1,8 @@
+function replaceEmpty restSL [stringlit] RAE [repeat assignment_expression]
+    replace [stringlit]
+	""
+    where not
+	RAE [?notEmpty]
+    by
+	restSL
+end function

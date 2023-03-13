@@ -1,0 +1,10 @@
+
+switch (target) {
+    case 0 :
+        System.out.println ("target is zero");
+        break;
+    case 1 :
+        System.out.println ("target is one");
+        break;
+}
+ 

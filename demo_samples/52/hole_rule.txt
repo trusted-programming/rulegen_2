@@ -1,0 +1,6 @@
+function changeConstructorModifiers
+    replace * [ repeat modifier]
+        Modifiers [repeat modifier]
+    by
+	Modifiers [setDefaultAccess][changeProtected]		  
+end function

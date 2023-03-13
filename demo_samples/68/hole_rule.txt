@@ -1,0 +1,11 @@
+rule toStaticConstructor 
+	replace[class_body_declaration]
+		'static Block[block]
+	% constructor name is same as class name
+	import ClassName[class_name]	
+	construct NewStaticConstructor[constructor_declaration]
+	   'static ClassName() 
+	      Block				
+	by
+	   NewStaticConstructor
+end rule

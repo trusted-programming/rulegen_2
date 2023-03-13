@@ -1,0 +1,9 @@
+function localVarDecl2AssignmentExp
+    replace [declaration_or_statement]
+	_ [repeat modifier] _ [type_specifier] Id [id] _ [opt generic_parameter] _ [repeat dimension]
+	'= Exp [conditional_expression] ';
+    construct Ass [assignment_expression]
+	Id '= Exp 
+    by
+	Ass ';
+end function

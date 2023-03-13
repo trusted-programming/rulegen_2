@@ -1,0 +1,6 @@
+function changeThrow
+	replace*[statement]
+		'throw ThrowExp[expression] ';
+	by
+		'throw ThrowExp[changeExpression][changeCSException][changeCSStatement] ';
+end function

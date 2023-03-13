@@ -1,0 +1,4 @@
+function isStatic
+	match [modifier]
+		'static
+end function

@@ -1,0 +1,9 @@
+rule deleteNonAssignments
+    replace [repeat declaration_or_statement]
+        S [declaration_or_statement]
+        Rest [repeat declaration_or_statement]
+    where not
+        S [isAssignment]
+    by
+        Rest
+end rule

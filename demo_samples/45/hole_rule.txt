@@ -1,0 +1,8 @@
+function toRight Pivot [id] N [id]
+    where not 
+        N [< Pivot]
+    replace [id *] 
+        List [id *]
+    by 
+        N List
+end function

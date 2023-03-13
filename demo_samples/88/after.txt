@@ -1,0 +1,34 @@
+ using System;
+
+        class InstanceInit2 {
+
+            private void initialMethod1 () {
+                int tmp = 1;
+                int x = 2;
+                int y = 10;
+            }
+
+            private void initialMethod2 () {
+                bool flag = false;
+            }
+
+            internal InstanceInit2 () : base () {
+                initialMethod1 ();
+                initialMethod2 ();
+                bool flag = false;
+                sbyte b;
+            }
+
+        }
+
+        /* Instance initialization blocks are transformed into methods
+
+        
+           and added in the constructor,super call is preserved 
+
+        
+           
+        
+           */
+
+ 

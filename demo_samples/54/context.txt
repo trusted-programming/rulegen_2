@@ -1,0 +1,96 @@
+function changeDataTypes
+	replace[type_specifier]
+		DataType[primitive_type]
+	by
+		DataType[changePrimDataTypes]
+end function
+
+function changeArrayTypes
+	replace[type_specifier]
+		ArrayType[type_name] Dimentions[repeat dimension+]
+		deconstruct *[primitive_type] ArrayType
+			PrimType[primitive_type]
+	by
+		PrimType[changePrimDataTypes]Dimentions
+end function
+
+function changeExceptionName
+replace *[qualified_name]
+	ExceptionName[qualified_name]
+import RunTimeExceptionsMapper [ExceptionMapper]
+deconstruct * [exceptionTable] RunTimeExceptionsMapper
+	ExceptionName -> CSName [qualified_name]
+by
+	CSName
+end function
+
+
+
+function changeCSStatement
+	replace [expression]
+		FirstId[id] '. SecondId[id]'. ThirdId[id]Remaining[repeat component]
+	%to search for specified entry in the statemnts table
+	construct Key[reference]
+		FirstId.SecondId.ThirdId
+	import StatementMapping [StmtMapper]
+	% match the key entry with C# one
+	deconstruct *[table_entry] StatementMapping
+		Key -> CSStmt [reference]
+	% to build a new valid expression 
+	deconstruct CSStmt
+		FirstCSId[id] CSRemaining[repeat component]
+	%join the method arguements with the new part
+	by 
+		FirstCSId CSRemaining[. Remaining]
+end function
+
+function changeCSException
+	replace *[expression]
+		exp[expression]
+	deconstruct exp
+		'new ExceptionName[qualified_name]()
+	by
+		'new ExceptionName[changeExceptionName]()
+end function
+
+rule containFinal
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+end rule
+
+rule removeNonCSModifiers
+	replace [repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isTransient][isVolatile]
+	by
+		RemainingModifiers
+end rule
+
+function changePrimDataTypes
+	replace [primitive_type]
+		JavaType[primitive_type]
+		import PrimDataTypesMapping [DataMapper]
+		deconstruct * [primitiveTable] PrimDataTypesMapping
+			JavaType -> CSType [primitive_type]
+	by
+		CSType
+end function
+
+function isFinal
+	match [modifier]
+		'final
+end function
+
+function isTransient
+	match [modifier]
+		'transient
+end function
+
+function isVolatile
+	match [modifier]
+		'volatile
+end function
+

@@ -1,0 +1,11 @@
+function checkLocalBlankConstants
+	replace[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_name];%no initializer
+	where Modifiers[containFinal]
+	by
+		Modifiers[changeProtected][removeNonCS]%remove final
+		TypeSpecifier[changeDataTypes][changeArrayTypes][changeExceptionName]
+		VarDecl[changeCSException][changeCSStatement] ;	
+end function

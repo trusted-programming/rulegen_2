@@ -1,0 +1,16 @@
+
+{
+
+    {
+        int tmp = 1;
+        int x = 2;
+        int y = 10;
+    }
+
+    {
+        boolean flag = false;
+    }
+
+}
+
+ 

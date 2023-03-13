@@ -1,0 +1,6 @@
+function changeDataTypes
+	replace[type_specifier]
+		DataType[primitive_type]
+	by
+		DataType[changePrimDataTypes]
+end function

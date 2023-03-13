@@ -1,0 +1,6 @@
+function changeMain
+replace[method_name]
+	'main
+by
+	'Main
+end function

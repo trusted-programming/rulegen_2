@@ -1,0 +1,18 @@
+function translateStatement
+	replace [statement]
+		OneStmnt[statement]
+	by
+		OneStmnt[changeExpressionStmt]
+		        [changeIf]
+		        [changeSwitch]
+		        [changeWhile]
+		        [changeDoWhile]
+		        [changeFor]
+		        [changeBreak]
+		        [changeContinue]
+		        [changeReturn]
+		        [changeThrow]
+		        [changeSynchronized]
+		        [changeTry]
+		       
+end function

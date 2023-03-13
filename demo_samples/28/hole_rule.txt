@@ -1,0 +1,5 @@
+function containInitBlock
+	match*[repeat class_body_declaration]
+		Block[block]
+		remaining[repeat class_body_declaration]
+end function

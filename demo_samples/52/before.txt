@@ -1,0 +1,17 @@
+
+int outer_x = 100;
+
+void test () {
+}
+
+// this is an inner class
+
+class Inner {
+
+    void display () {
+        System.out.println ("display: Inner class in Java ");
+    }
+
+}
+
+ 

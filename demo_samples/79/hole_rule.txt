@@ -1,0 +1,6 @@
+function changeAssignment
+    replace [expression_statement]
+	CE1 [cast_expression] '= CE2 [cast_expression] RBO [repeat binary_operation]
+    by
+	CE1 ':= CE2 RBO
+end function

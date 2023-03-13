@@ -1,0 +1,24 @@
+
+//constructor
+
+//constructor with arrays
+
+
+Methods (byte a []) {
+}
+
+public Methods () {
+}
+
+//arrays within methods
+
+
+public void swap (int a [], int b [], boolean f []) {
+}
+
+public static void main (String args []) {
+    // Your code goes here
+    
+}
+
+ 

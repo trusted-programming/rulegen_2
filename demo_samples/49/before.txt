@@ -1,0 +1,6 @@
+
+do {
+    a ++;
+    System.out.println (a);
+} while (a < 10);
+ 

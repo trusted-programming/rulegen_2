@@ -1,0 +1,13 @@
+
+static int classCount;
+
+static void classBump () {
+    try {
+        synchronized (Class.forName ("BumpTest")) {
+            classCount ++;
+        }
+    } catch (ClassNotFoundException e) {
+    }
+}
+
+ 

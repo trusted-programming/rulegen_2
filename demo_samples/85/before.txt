@@ -1,0 +1,6 @@
+
+z := x + y
+if z > 10 then
+    x := x - 1
+end if
+ 

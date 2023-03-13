@@ -1,0 +1,4 @@
+function isCompileTime
+	match[variable_declarator]
+		VarName[variable_name] '= Value[literal]
+end function

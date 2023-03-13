@@ -1,0 +1,11 @@
+ public static void Main (String [] args) {
+    bool flag = true;
+    const int y = 6;
+    double X = Math.random ();
+    int DAYS_IN_YEAR;
+    if (flag) DAYS_IN_YEAR = 366;
+    else DAYS_IN_YEAR = 365;
+
+}
+
+ 

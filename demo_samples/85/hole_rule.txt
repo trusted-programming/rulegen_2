@@ -1,0 +1,6 @@
+function changePostPlusPlus
+    replace [expression_statement]
+	ID [identifier] '++ 
+    by
+	ID ':= ID '+ 1
+end function

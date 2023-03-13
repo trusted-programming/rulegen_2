@@ -1,0 +1,6 @@
+function changeOptExpression
+	replace[opt expression]
+		Expression[opt expression]
+	by
+		Expression[$ '>>> '>>]
+end function

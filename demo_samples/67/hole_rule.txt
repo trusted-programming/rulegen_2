@@ -1,0 +1,8 @@
+function processJavaSwitchAltEntry
+    replace [switch_alternative]
+	Label [switch_label] Decls [repeat declaration_or_statement+] 
+    export SwitchAltDecls [repeat declaration_or_statement+]
+	Decls 
+    by
+	Label Decls 
+end function

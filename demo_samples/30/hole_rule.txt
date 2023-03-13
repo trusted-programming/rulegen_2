@@ -1,0 +1,12 @@
+function changeCatch CatchClause[catch_clause]
+	replace[repeat catch_clause]
+		Catches[repeat catch_clause]
+	deconstruct CatchClause	
+		'catch '( DataType[type_specifier] Name[variable_name] ') 
+			CatchBlock[block] 
+	construct NewCatchClause[catch_clause]
+		'catch '( DataType[changeDataTypes][changeArrayTypes][changeExceptionName] Name ') 
+			CatchBlock[translateBlock]  
+	by
+		Catches[. NewCatchClause]
+end function

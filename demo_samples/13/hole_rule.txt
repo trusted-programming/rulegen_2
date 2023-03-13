@@ -1,0 +1,17 @@
+function changMethodArray
+	replace[method_or_constructor_declaration]
+		Modifiers[repeat modifier] 
+		ReturnedType[type_specifier] Name[declared_name]
+		'( FormalParms[list formal_parameter] ') Dim[repeat dimension] 
+		ThrowsClause[opt throws] 
+		Body[method_body]
+	construct NewFormalParms[list formal_parameter]
+		FormalParms[changeMethodConArrayDimentions ]
+	by
+		Modifiers
+		ReturnedType Name
+		'( NewFormalParms ') Dim 
+		ThrowsClause 
+		Body
+
+end function

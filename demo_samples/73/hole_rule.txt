@@ -1,0 +1,8 @@
+function addPublic
+	replace [repeat modifier]
+		Modifiers[repeat modifier]
+	where not Modifiers[containPublic][containPrivate][containProtected] 
+	by
+	   'public 
+	    Modifiers
+end function

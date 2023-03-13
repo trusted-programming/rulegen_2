@@ -1,0 +1,8 @@
+ internal InstanceInit2 () : base () {
+    initialMethod1 ();
+    initialMethod2 ();
+    bool flag = false;
+    sbyte b;
+}
+
+ 

@@ -1,0 +1,4 @@
+function is_static 
+    match * [modifier]
+	'static
+end function

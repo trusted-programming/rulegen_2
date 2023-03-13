@@ -1,0 +1,41 @@
+ {
+
+    virtual protected extern void method1 ();
+
+    virtual internal protected bool method2 () {
+        return true;
+    }
+
+    public int method3 () {
+        return 0;
+    }
+
+    abstract internal protected void method4 ();
+
+    public abstract void method5 ();
+
+    //constructor
+    
+    //constructor with arrays
+    
+
+    internal Methods (sbyte [] a) {
+    }
+
+    public Methods () {
+    }
+
+    //arrays within methods
+    
+
+    virtual public void swap (int [] a, int [] b, bool [] f) {
+    }
+
+    public static void Main (String [] args) {
+        // Your code goes here
+        
+    }
+
+}
+
+ 

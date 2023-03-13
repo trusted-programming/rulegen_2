@@ -1,0 +1,9 @@
+
+loop
+    x := a + b
+    y := x
+    a := y + 3
+    y2 := x4 - 2
+    z := x4 + a * y2
+end loop
+ 

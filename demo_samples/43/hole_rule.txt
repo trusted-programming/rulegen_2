@@ -1,0 +1,9 @@
+function finalToConst
+	replace *[repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+	by 
+		'const
+		RemainingModifiers
+end function

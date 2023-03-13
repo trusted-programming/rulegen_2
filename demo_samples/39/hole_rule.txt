@@ -1,0 +1,12 @@
+function changeBasicScanf
+    replace [expression_statement]
+	'scanf '( LE [list assignment_expression+] ')
+    construct repeatExpr [repeat assignment_expression]
+	_ [. each LE]
+    deconstruct repeatExpr
+	SL [stringlit] Rest [repeat assignment_expression]
+    construct listExpr [list assignment_expression]
+	_ [, each Rest]
+    by
+	'get listExpr
+end function

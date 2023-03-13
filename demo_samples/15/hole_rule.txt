@@ -1,0 +1,6 @@
+function changeExpressionStmt
+	replace[statement]
+		Expression[expression];
+	by
+		Expression[changeExpression][changeCSStatement];
+end function

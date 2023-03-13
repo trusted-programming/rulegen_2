@@ -1,0 +1,7 @@
+ while (a < 10) {
+    if (a == 5) break cleanup;
+
+}
+cleanup :
+Console.WriteLine (a);
+ 

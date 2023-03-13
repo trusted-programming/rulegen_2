@@ -1,0 +1,8 @@
+function changeWhile
+	replace*[statement]
+		'while '( WhileExp[expression] ') 
+        		Stmts[statement]   
+	by
+		'while '( WhileExp[changeExpression]') 
+        		Stmts[translateStatement][translateBlock]
+end function

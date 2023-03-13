@@ -1,0 +1,6 @@
+function changeFinally
+	replace[opt finally_clause]
+		'finally FinBlock[block] 
+	by
+		'finally FinBlock[translateBlock]
+end function

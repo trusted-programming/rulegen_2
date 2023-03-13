@@ -1,0 +1,10 @@
+function changeDoWhile
+	replace*[statement]
+		'do
+			Stmts[statement]
+		'while '( DoWhileExp[expression] ');    
+	by
+		'do
+			Stmts[translateStatement][translateBlock]
+		'while '( DoWhileExp[changeExpression]'); 	
+end function

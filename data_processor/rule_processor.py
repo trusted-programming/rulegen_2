@@ -52,10 +52,10 @@ class RuleDataProcessor():
         data_tuples = []
         for i, sample in enumerate(data):
 
-            source = sample["before"] + "<unk>" + sample["context"]
-            target = sample["after"]
+            source = sample["before"] + " <unk> " + sample["after"] + " <unk> " + sample["context"]
+            target = sample["hole_rule"]
 
-            data_tuple = (i, source, sample["after"])
+            data_tuple = (i, source, target)
             data_tuples.append(data_tuple)
             
         with concurrent.futures.ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()-5) as executor:
@@ -79,8 +79,8 @@ class RuleDataProcessor():
 
         # index = int(source_split[0])
         
-        source_ids = self.tokenizer.encode(source, max_length=1000, padding='max_length', truncation=True)
-        target_ids = self.tokenizer.encode(target, max_length=1000, padding='max_length', truncation=True)
+        source_ids = self.tokenizer.encode(source, max_length=self.max_source_length, padding='max_length', truncation=True)
+        target_ids = self.tokenizer.encode(target, max_length=self.max_target_length, padding='max_length', truncation=True)
 
         count_source_ids = [source_id for source_id in source_ids if source_id != 0]
         count_target_ids = [target_id for target_id in target_ids if target_id != 0]

@@ -1,0 +1,33 @@
+function fallThrough
+	replace*[repeat switch_alternative]
+	  	Label[switch_label]  Stmts[repeat declaration_or_statement] 
+		RemainingSwitchAlters [repeat switch_alternative]   
+	construct Length[number]
+		 _[length Stmts]
+	%no break and at least one statement is present
+	where not Stmts[ContainBreak]
+	where Length[ > 0]
+	where not Stmts[isGoto]
+	deconstruct RemainingSwitchAlters
+		NextLabel[switch_label]  NextStmts[repeat declaration_or_statement] 
+		RemainingAlters [repeat switch_alternative] 
+	%goto the next alternative
+	construct GotoStmt[repeat declaration_or_statement]
+		goto NextLabel 
+	%replace colon with semi colon to be a valid statement
+	construct NewGotoStmt[repeat declaration_or_statement]
+		GotoStmt[$ ': '; ]	
+	construct NewStmts[repeat declaration_or_statement] 
+		Stmts[. NewGotoStmt]
+	%new statements with goto
+	construct NewAlter[repeat switch_alternative]
+		Label NewStmts
+	%check the other cases also
+	construct NewRemainingAlters[repeat switch_alternative]
+		RemainingSwitchAlters[fallThrough]
+	%the final result
+	construct NewSwitchAlters[repeat switch_alternative]
+		NewAlter[. NewRemainingAlters]
+	by
+		  NewSwitchAlters
+end function

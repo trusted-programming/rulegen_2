@@ -1,0 +1,9 @@
+
+{
+    try {
+        synchronized (Class.forName ("BumpTest")) {
+            classCount ++;
+        }
+    } catch (ClassNotFoundException e) {
+    }
+} 

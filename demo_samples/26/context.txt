@@ -1,0 +1,759 @@
+rule transformVarAssignment
+    replace [declaration_or_statement]
+	 Ref [reference] '= Butt [assignment_expression] ';
+    construct TclCmd [repeat tcl_expr_more]
+	_ [transformJavaLocalScopeVar Ref] 
+
+	  [transformJavaClassVar Ref] 
+	  [transformJavaClassStaticVar Ref] 
+
+	  [transformJavaThisVar Ref] 
+	  [transformJavaThisStaticVar Ref] 
+
+	  [complexRefAssignment Ref]
+	  [assignToArrayRef Ref]
+    construct TclLit [tcl_expr_more]
+	_ [transformArithAssExp Butt]
+	  [transformLiteralAssExp Butt]
+	  [transformRefAssExp Butt]
+	  [transformNewAssExp Butt]
+    by
+	TclCmd [. TclLit] '%
+end rule
+
+rule transformExceptions
+    replace $ [program]
+	P [program]
+    by
+	P [transformThrowStmt]
+	  [transformTryCatch]
+end rule
+
+rule transformConditionalStatements
+    replace $ [program]
+	P [program]
+    by
+	P [transformIfElse]
+	  [transformIf]
+%	  [transformCondChoice]
+	  [transformWhile]
+	  [transformSwitch]
+	  [transformFor]
+	  [transformForeach]
+end rule
+
+rule convertUnaryOpInMultiplicative
+    replace $ [multiplicative_expression]
+	Multi [multiplicative_expression]
+    deconstruct Multi
+	Ref [id] Op [pre_inc_dec]
+    by
+	Multi [convertUnaryOpMultiMy]
+	      [convertUnaryOpMultiClass]
+	      [convertUnaryOpMultiLocal]
+end rule
+
+rule convertUnaryOpFirst
+    replace $ [declaration_or_statement]
+	Decl [declaration_or_statement]
+    deconstruct Decl
+	Ref [id] Op [pre_inc_dec] ';
+    by
+	Decl [convertUnaryOpFirstMy]
+	     [convertUnaryOpFirstClass]
+	     [convertUnaryOpFirstLocal]
+end rule
+
+rule transformNewExpr
+    replace $ [multiplicative_expression]
+	New [class_instance_creation_expression]
+    construct Cmd [tcl_cmd]
+	_ [convertNewClassInstance New]
+    deconstruct Cmd
+	'[ Expr [tcl_expr] ']
+    by
+	'[ Expr ']
+end rule
+
+function transformJavaLocalScopeVar Ref [reference]
+    deconstruct Ref
+	Id [id]  Dims [repeat dimension]
+    construct TclDim [repeat tcl_array_dimension]
+	_ [dim2TclDim Dims]
+    replace [repeat tcl_expr_more]
+	_ [repeat tcl_expr_more]
+    by
+	'set Id TclDim
+end function
+
+function transformJavaClassVar Ref [reference]
+    deconstruct Ref
+	Id [id]  Dims [repeat dimension]
+    construct TclDim [repeat tcl_array_dimension]
+	_ [dim2TclDim Dims]
+    replace [repeat tcl_expr_more]
+	_ [repeat tcl_expr_more]
+    where 
+	Id [is_class_var]
+    by
+	'my 'set Id TclDim
+end function
+
+function transformJavaClassStaticVar Ref [reference]
+    deconstruct Ref
+	Id [id]  Dims [repeat dimension]
+    construct TclDim [repeat tcl_array_dimension]
+	_ [dim2TclDim Dims]
+    replace [repeat tcl_expr_more]
+	Expr [repeat tcl_expr_more]
+    where 
+	Id [is_staticclass_var]
+    by
+	'[ 'my 'class '] 'set Id TclDim
+end function
+
+function transformJavaThisVar Ref [reference]
+    deconstruct Ref
+	'this '. Id [id] 
+    replace [repeat tcl_expr_more]
+	Expr [repeat tcl_expr_more]
+    where 
+	Id [is_class_var]
+    by
+	'my 'set Id 
+end function
+
+function transformJavaThisStaticVar Ref [reference]
+    deconstruct Ref
+	'this '. Id [id] 
+    replace [repeat tcl_expr_more]
+	Expr [repeat tcl_expr_more]
+    where 
+	Id [is_staticclass_var]
+    by
+	'[ 'my 'class '] 'set Id 
+end function
+
+function complexRefAssignment Ref [reference]
+    deconstruct Ref
+	Id [id] Dim [repeat dimension] Comps [repeat component+] 
+    replace [repeat tcl_expr_more]
+	Expr [repeat tcl_expr_more]
+    construct ExprLen [number]
+	_ [length Expr]
+    where not
+	ExprLen [> 0]
+    deconstruct * Comps
+	'. VarId [id]
+    construct CompsLen [number]
+	_ [length Comps] [- 1]
+    construct NewComps [repeat component]
+	Comps [head CompsLen]
+    construct NewRef [reference]
+	Id Dim NewComps
+    by
+	NewRef 'set VarId 
+end function
+
+function assignToArrayRef Ref [reference]
+    deconstruct Ref
+	Id [id] Dims [repeat dimension] Comps [repeat component] 
+
+    replace [repeat tcl_expr_more]
+	Expr [repeat tcl_expr_more]
+    construct ExprLen [number]
+	_ [length Expr]
+    where not
+	ExprLen [> 0]
+
+    deconstruct * Comps
+	Dim [dimension]
+
+    construct CompsLen [number]
+	_ [length Comps] [- 1]
+    construct NewComps [repeat component]
+	Comps [head CompsLen]
+
+
+    deconstruct * NewComps
+	'. VarId [id]
+    construct CompsLen2 [number]
+	_ [length NewComps] [- 1]
+    construct DimComp [component]
+	Dim
+    construct NewComps2 [repeat component]
+	NewComps [head CompsLen2] % [. DimComp]
+
+    construct NewRef [reference]
+	Id [this2my] Dims NewComps2 
+
+    construct TmpDims [repeat dimension]
+	Dim
+    construct TclDim [repeat tcl_array_dimension]
+	_ [dim2TclDim TmpDims]
+
+    by
+        NewRef 'set VarId TclDim 
+end function
+
+function transformArithAssExp Butt [assignment_expression]
+    replace [tcl_expr_more]
+	_ [tcl_expr_more] 
+    where
+	Butt [is_arithmetic]
+    construct TclRef [tcl_expr_more]
+	'[ 'expr '{ Butt '} ']
+    by
+	TclRef
+end function
+
+function transformLiteralAssExp Butt [assignment_expression]
+    replace [tcl_expr_more]
+	_ [tcl_expr_more] 
+    deconstruct Butt
+	Literal [literal]
+    by
+	Literal
+end function
+
+function transformRefAssExp Butt [assignment_expression]
+    replace [tcl_expr_more]
+	_ [tcl_expr_more] 
+    deconstruct Butt
+	Ref [reference]
+    by
+	Ref
+end function
+
+function transformNewAssExp Butt [assignment_expression]
+    replace [tcl_expr_more]
+	_ [tcl_expr_more] 
+    deconstruct Butt
+	New [class_instance_creation_expression]
+    construct NewCmd [tcl_cmd]
+	_ [convertNewClassInstance New]
+    by
+	NewCmd
+end function
+
+rule transformTryCatch
+    replace $ [declaration_or_statement]
+	'try Block [block] Catches [repeat catch_clause] _ [opt finally_clause]
+    deconstruct Block
+	'{ BlockStmts [repeat declaration_or_statement] '}
+    construct CatchesStmts [repeat declaration_or_statement]
+	_ [^ Catches]
+    construct CatchBlock [xotcl_proc_body]
+	CatchesStmts
+    by
+	'if '{ '[ 'catch '{ BlockStmts '} 'result '] '} '{
+	CatchBlock
+	'} 
+end rule
+
+rule transformThrowStmt
+    replace $ [declaration_or_statement]
+	_ [throw_statement]	
+    by
+	'error '$result
+end rule
+
+rule transformIf
+    replace [declaration_or_statement]
+	'if '( IfExpr [expression] ') _ [repeat comment_NL]
+	Stmt [statement] 
+    construct EmptyTclBlock [tcl_block]
+	'{ '}
+    construct IfTclBlock [tcl_block]
+	EmptyTclBlock [statementOneDeclToTclBlcok Stmt] 
+		      [statementBlockToTclBlock Stmt]
+    construct TclIf [tcl_if_cmd]
+	'if '{ IfExpr '} IfTclBlock
+    by
+	TclIf
+end rule
+
+rule transformIfElse
+    replace [declaration_or_statement]
+	'if '( IfExpr [expression] ') IfStmt [statement] _ [repeat comment_NL]
+	'else ElseStmt [statement]
+    construct EmptyTclBlock [tcl_block]
+	'{ '}
+    construct IfTclBlock [tcl_block]
+	EmptyTclBlock [statementOneDeclToTclBlcok IfStmt] 
+		      [statementBlockToTclBlock IfStmt]
+    construct ElseTclBlock [tcl_block]
+	EmptyTclBlock [statementOneDeclToTclBlcok ElseStmt] 
+		      [statementBlockToTclBlock ElseStmt]
+    deconstruct IfTclBlock
+	'{ IfBody [opt xotcl_proc_body] '}
+    construct TclIf [tcl_if_cmd]
+	'if '{ IfExpr '} '{ IfBody '} 'else ElseTclBlock
+    by
+	TclIf
+end rule
+
+rule transformCondChoice
+    replace $ [assignment_expression]
+	Cond [conditional_expression]
+    deconstruct Cond
+	Una [unary_expression] '? Exp [expression] ': CondChExp [conditional_expression]
+    by
+	'[ 'expr '{ Una '? Exp  ': CondChExp '} ']
+end rule
+
+rule transformWhile
+    replace [declaration_or_statement]
+	'while '( Expr [expression] ') Stmt [statement] 
+    construct EmptyTclBlock [tcl_block]
+	'{ '}
+    construct WhileTclBlock [tcl_block]
+	EmptyTclBlock [statementOneDeclToTclBlcok Stmt] 
+		      [statementBlockToTclBlock Stmt]
+    construct TclWhile [tcl_while_cmd]
+	'while '{ Expr '}  WhileTclBlock
+    by
+	TclWhile
+end rule
+
+rule transformSwitch
+    replace [declaration_or_statement]
+	'switch '( Expr [expression] ') '{ JAlts [repeat switch_alternative] '}
+    construct Alts [repeat tcl_switch_entry]
+	_ [transformSwitchAlternatives each JAlts] 
+    construct TclSwitch [tcl_switch_cmd]
+	'switch Expr '{ Alts '} 
+    by
+	TclSwitch
+end rule
+
+rule transformFor
+    replace [declaration_or_statement]
+	'for '( ForInit [for_init] 
+	ForExpr [opt expression] '; 
+	ForUpd [list expression] ') 
+	Stmt [statement] 
+    construct ForUpdSeq [repeat expression]
+	_ [. each ForUpd]
+    construct TclCmdLists [repeat tcl_cmd_list]
+	_ [expressionListToTclCmdList ForUpdSeq] 
+	  [transformVarAssignmentFor]
+    construct TclForInit [repeat tcl_cmd_list]
+	_ [transformForInitStmt1 ForInit] 
+	  [transformForInitStmt2 ForInit]
+    construct EmptyTclBlock [tcl_block]
+	'{ '}
+    construct ForTclBlock [tcl_block]
+	EmptyTclBlock [statementOneDeclToTclBlcok Stmt] 
+		      [statementBlockToTclBlock Stmt]
+    by
+	'for '{ TclForInit '} 
+	'{ ForExpr '} '{ TclCmdLists '}
+	ForTclBlock
+end rule
+
+rule transformForeach
+    replace [declaration_or_statement]
+	'for '( 
+	%for_in_init
+	_ [repeat modifier] _ [type_specifier] Id [id] _ [opt generic_parameter] _ [repeat dimension]
+	': Expr [expression] ')
+		Stmt [statement]        
+    construct EmptyTclBlock [tcl_block]
+	'{ '}
+    construct ForTclBlock [tcl_block]
+	EmptyTclBlock [statementOneDeclToTclBlcok Stmt] 
+		      [statementBlockToTclBlock Stmt]
+    by
+	'foreach '{ Id '} '{ Expr '}
+	ForTclBlock
+end rule
+
+rule convertUnaryOpMultiLocal
+    replace $ [multiplicative_expression]
+	Ref [id] Op [pre_inc_dec] 
+    construct Minus [repeat tcl_expr_more]
+	_  [makeDecrCmdTail Op]
+    construct NewE [tcl_expr]
+	'incr Ref Minus
+    by
+	'[ NewE '] 
+end rule
+
+rule convertUnaryOpMultiMy
+    replace $ [multiplicative_expression]
+	Ref [id] Op [pre_inc_dec] 
+    where 
+	Ref [is_class_var]
+    construct Minus [repeat tcl_expr_more]
+	_  [makeDecrCmdTail Op]
+    construct NewE [tcl_expr]
+	'my 'incr Ref Minus
+    by
+	'[ NewE '] 
+end rule
+
+rule convertUnaryOpMultiClass
+    replace $ [multiplicative_expression]
+	Ref [id] Op [pre_inc_dec] 
+    where 
+	Ref [is_staticclass_var]
+    construct Minus [repeat tcl_expr_more]
+	_  [makeDecrCmdTail Op]
+    construct NewE [tcl_expr]
+	'[ 'my 'class '] 'incr Ref Minus
+    by
+	'[ NewE '] 
+end rule
+
+rule convertUnaryOpFirstLocal
+    replace $ [declaration_or_statement]
+	Ref [id] Op [pre_inc_dec] ';
+    construct Minus [repeat tcl_expr_more]
+	_  [makeDecrCmdTail Op]
+    construct NewE [tcl_expr]
+	'incr Ref Minus
+    by
+	NewE '%
+end rule
+
+rule convertUnaryOpFirstMy
+    replace $ [declaration_or_statement]
+	Ref [id] Op [pre_inc_dec] ';
+    where 
+	Ref [is_class_var]
+    construct Minus [repeat tcl_expr_more]
+	_  [makeDecrCmdTail Op]
+    construct NewE [tcl_expr]
+	'my 'incr Ref Minus
+    by
+	NewE '%
+end rule
+
+rule convertUnaryOpFirstClass
+    replace $ [declaration_or_statement]
+	Ref [id] Op [pre_inc_dec] ';
+    where 
+	Ref [is_staticclass_var]
+    construct Minus [repeat tcl_expr_more]
+	_  [makeDecrCmdTail Op]
+    construct NewE [tcl_expr]
+	'[ 'my 'class '] 'incr Ref Minus
+    by
+	NewE '%
+end rule
+
+function convertNewClassInstance New [class_instance_creation_expression]
+    replace [tcl_cmd]
+	_ [tcl_cmd]
+    deconstruct New
+	'new JClassName [reference] '( Args [list argument] ') _ [opt class_body]
+    construct TmpName [repeat tcl_id]
+	_ [pkgRef2TclId JClassName]
+    deconstruct * TmpName
+	ClassName [tcl_id]
+    construct Args1 [repeat expression]
+	_ [argumentToExpression each Args]
+    construct TclArgs [repeat tcl_expr_more]
+	_ [expressionSeq2TclExprMoreSeq Args1]
+    by
+	'[ ClassName ClassName TclArgs ']
+end function
+
+function dim2TclDim Dims [repeat dimension]
+    construct DimLen [number]
+	_ [length Dims]
+    where 
+	DimLen [= 1]
+    deconstruct Dims
+	Dim [dimension] _ [repeat dimension]
+    deconstruct Dim
+	'[ Expr [expression] ']
+    replace [repeat tcl_array_dimension]
+	_ [repeat tcl_array_dimension]
+    by
+	'( Expr ')
+end function
+
+function is_class_var
+    import JClassOrigin [class_declaration]
+    construct Fields [repeat field_declaration]
+	_ [^ JClassOrigin]
+    match * [id]
+	Id [id]
+    where 
+	Fields [is_nonstatic_var Id]
+end function
+
+function is_staticclass_var
+    import JClassOrigin [class_declaration]
+    construct Fields [repeat field_declaration]
+	_ [^ JClassOrigin]
+    match * [id]
+	Id [id]
+    where 
+	Fields [is_static_var Id]
+end function
+
+function this2my 
+    replace [id]
+	'this
+    by
+	'my
+end function
+
+rule is_arithmetic
+    match $ [any]
+	Any [any]
+    where 
+	Any [istype 'add_op]
+	    [istype 'mult_op]
+	    [istype 'unary_op]
+	    [istype 'or_conditional_and_expression]
+	    [istype 'and_inclusive_or_expression]
+	    [istype 'or_exclusive_or_expression]
+	    [istype 'or_and_expression]
+	    [istype 'and_equality_expression]
+	    [istype 'equality_op]
+	    [istype 'relational_op]
+	    [istype 'shif_op]
+	    [istype 'conditional_choice]
+end rule
+
+function statementOneDeclToTclBlcok Stmt [statement]
+    replace [tcl_block]
+	_ [tcl_block]
+    deconstruct not Stmt
+	_ [block]
+    construct Decl [declaration_or_statement]
+	Stmt
+    by
+	'{ Decl '}
+end function
+
+function statementBlockToTclBlock Stmt [statement]
+    replace [tcl_block]
+	_ [tcl_block]
+    deconstruct Stmt
+	'{ Decls [repeat declaration_or_statement] '}
+    by
+	'{ Decls '}
+end function
+
+function transformSwitchAlternatives JAlt [switch_alternative]
+    replace [repeat tcl_switch_entry]
+	Entries [repeat tcl_switch_entry]
+    deconstruct JAlt
+	'case Label [constant_expression] ': Decls [repeat declaration_or_statement]
+    construct SwitchLabel [tcl_cmd]
+	_ [switchLabelConvertNum Label] [switchLabelConvertChar Label]
+    construct Entry [tcl_switch_entry]
+	SwitchLabel '{ Decls '} 	
+    by
+	Entries [. Entry]
+end function
+
+function expressionListToTclCmdList Expressions [repeat expression]
+    replace [repeat tcl_cmd_list]
+	_  [repeat tcl_cmd_list]
+    deconstruct Expressions
+	Expr [expression] Exprs [repeat expression]
+    construct TclCmdList [tcl_cmd_list]
+	Expr
+    by
+	TclCmdList [addExpToTclCmdList each Exprs]
+end function
+
+function transformForInitStmt1 ForInit [for_init]
+    deconstruct ForInit
+	Exprs [list expression] ';
+    replace [repeat tcl_cmd_list]
+	_ [repeat tcl_cmd_list]
+    construct ExprSeq [repeat expression]
+	_ [. each Exprs]
+    by
+	_ [expressionListToTclCmdList ExprSeq] [transformVarAssignmentFor]
+end function
+
+function transformForInitStmt2 ForInit [for_init]
+    deconstruct ForInit
+	LocalDecl [declaration_or_statement] 
+    construct TmpDecls [repeat declaration_or_statement]
+	LocalDecl
+    construct TmpDecls2 [repeat declaration_or_statement]
+	TmpDecls [splitLocalVarDeclarations] [localVarDecl2Assignment]
+    deconstruct TmpDecls2
+	Decl1 [declaration_or_statement] _ [repeat declaration_or_statement]
+    replace [repeat tcl_cmd_list]
+	_ [repeat tcl_cmd_list]
+    by
+%	LocalDecl
+	TmpDecls2
+end function
+
+rule transformVarAssignmentFor
+    replace [repeat tcl_expr_more]
+	 Ref [reference] '= Butt [assignment_expression] 
+    construct TclCmd [repeat tcl_expr_more]
+	_ [transformJavaLocalScopeVar Ref] 
+
+	  [transformJavaClassVar Ref] 
+	  [transformJavaClassStaticVar Ref] 
+
+	  [transformJavaThisVar Ref] 
+	  [transformJavaThisStaticVar Ref] 
+
+	  [complexRefAssignment Ref]
+	  [assignToArrayRef Ref]
+    construct TclLit [tcl_expr_more]
+	_ [transformArithAssExp Butt]
+	  [transformLiteralAssExp Butt]
+	  [transformRefAssExp Butt]
+	  [transformNewAssExp Butt]
+    by
+	TclCmd [. TclLit] 
+end rule
+
+function makeDecrCmdTail Op [pre_inc_dec]
+    deconstruct Op
+	'--
+    replace [repeat tcl_expr_more]
+	_ [repeat tcl_expr_more]
+    construct Num [tcl_literal]
+	-1
+    by
+	Num
+end function
+
+function expressionSeq2TclExprMoreSeq Expressions [repeat expression]
+    replace [repeat tcl_expr_more]
+	EMore [repeat tcl_expr_more]
+    deconstruct Expressions
+	Expr [expression] Exprs [repeat expression]
+    construct TclEMore [repeat tcl_expr_more]
+	Expr
+    by
+	EMore [. TclEMore] [expressionSeq2TclExprMoreSeq Exprs]
+end function
+
+function argumentToExpression Argument [argument]
+    replace [repeat expression]
+	Exps [repeat expression]
+    deconstruct Argument
+	Exp [expression]
+    by
+	Exps [. Exp]
+end function
+
+function pkgRef2TclId Ref [reference]
+    replace [repeat tcl_id]
+	_ [repeat tcl_id]
+    construct RefIds [repeat id]
+	_ [^ Ref]
+    deconstruct RefIds
+	FirstId [id] RestId [repeat id]
+    construct TclIdHead [tcl_id_head]
+	FirstId
+    construct TclIdPart [repeat tcl_id_part]
+	_ [addTclIdPart each RestId]
+    by
+	TclIdHead TclIdPart
+end function
+
+function is_nonstatic_var Id [id]
+    match * [field_declaration]
+	Field [field_declaration]
+    where
+	Field [has_var Id] 
+    where not
+	Field [is_static]
+end function
+
+function is_static_var Id [id]
+    match * [field_declaration]
+	Field [field_declaration]
+    where all
+	Field [has_var Id] [is_static]
+end function
+
+function switchLabelConvertNum Label [constant_expression]
+    replace [tcl_cmd]
+	_ [tcl_cmd]
+    deconstruct Label
+	Num [number]
+    by
+	Num
+end function
+
+function switchLabelConvertChar Label [constant_expression]
+    replace [tcl_cmd]
+	_ [tcl_cmd]
+    deconstruct Label
+	Chars [charlit]
+    construct Unq [id]
+	_ [unquote Chars]
+    by
+	Unq
+end function
+
+function addExpToTclCmdList Expr [expression]
+    replace [tcl_cmd_list]
+	TclExpr [tcl_expr] TclCmdMore [repeat tcl_cmd_more]
+    construct TclCmdMore2 [tcl_cmd_more]
+	'; Expr
+    by
+	TclExpr TclCmdMore [. TclCmdMore2]
+end function
+
+rule splitLocalVarDeclarations
+    replace [repeat declaration_or_statement]
+	Modr [repeat modifier] TypSpec [type_specifier] VarDecl [variable_declarator] ', VarDeclRest [list variable_declarator+] '; 
+	Rest [repeat declaration_or_statement]
+    by
+	Modr TypSpec VarDecl ';
+	Modr TypSpec VarDeclRest ';
+	Rest
+end rule
+
+rule localVarDecl2Assignment
+    replace $ [declaration_or_statement]
+	Decl [declaration_or_statement] 
+    deconstruct Decl
+	_ [repeat modifier] _ [type_specifier] _ [variable_declarators] ';
+    by
+	Decl [localVarDecl2AssignmentExp] [localVarDecl2AssignmentArray] 
+end rule
+
+function addTclIdPart Id [id]
+    replace [repeat tcl_id_part]
+	Parts [repeat tcl_id_part]
+    construct Part [tcl_id_part]
+	':: Id
+    by
+	Parts [. Part]
+end function
+
+function has_var Id [id]
+    match * [variable_name]
+	VarId [id] _ [opt generic_parameter] _ [repeat dimension]
+    where 
+	VarId [= Id]
+end function
+
+function is_static 
+    match * [modifier]
+	'static
+end function
+
+
+
+function localVarDecl2AssignmentArray
+    replace [declaration_or_statement]
+	_ [repeat modifier] _ [type_specifier] Id [id] _ [opt generic_parameter] _ [repeat dimension]
+	'= Exp [array_initializer] ';
+    construct Ass [assignment_expression]
+	Id '= Exp 
+    by
+	Ass ';
+end function
+

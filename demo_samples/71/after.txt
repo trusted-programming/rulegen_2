@@ -1,0 +1,15 @@
+ int mpro__cmov2i (p)
+    struct {
+        Icoord * x;
+        Icoord * y;
+    } * p;
+{
+    Icoord x;
+    Icoord y;
+    x = (Icoord) * p -> x;
+    y = (Icoord) * p -> y;
+    cmov2i (x, y);
+    return (0);
+}
+
+ 

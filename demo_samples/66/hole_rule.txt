@@ -1,0 +1,6 @@
+rule addDummyValueParam G [Ident]
+    replace [SimpleType]
+        G '[ GTP [SimpleTypeList] ']
+    by
+        G '[ GTP '] ( 1 )
+end rule

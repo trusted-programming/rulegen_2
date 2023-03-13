@@ -1,0 +1,38 @@
+ package require XOTcl
+namespace import ::xotcl::*
+
+Class create UnaryDemo_metapapa -superclass {Class} -slots {
+
+}
+
+UnaryDemo_metapapa create UnaryDemo -superclass {Class} -slots {
+
+}
+
+UnaryDemo proc main {args} {
+    set result [expr {+1}]
+    // result is now 1
+    
+    puts $result
+    incr result -1
+    // result is now 0
+    
+    puts $result
+    incr result
+    // result is now 1 
+    
+    puts $result
+    set result [expr {-$result}]
+    // result is now -1
+    
+    puts $result
+    set success 0
+    puts $success
+    // false
+    
+    puts !$success
+    // true
+    
+}
+
+ 

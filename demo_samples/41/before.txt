@@ -1,0 +1,7 @@
+
+static String initInstance () {
+    System.out.println ("Initializing instance variable");
+    return "instance";
+}
+
+ 

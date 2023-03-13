@@ -1,0 +1,4 @@
+function isPublic
+	match [modifier]
+		'public
+end function

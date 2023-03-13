@@ -1,0 +1,16 @@
+function checkLocalConstants
+	replace[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where Modifiers[containFinal]
+	where FirstVarDecl[isCompileTime]
+	by
+		Modifiers[finalToConst][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes][changeExceptionName]
+		VarDecl[changeCSException][changeCSStatement] ;	
+end function

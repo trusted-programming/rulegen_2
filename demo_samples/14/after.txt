@@ -1,0 +1,15 @@
+ public Methods () {
+}
+
+//arrays within methods
+
+
+virtual public void swap (int [] a, int [] b, bool [] f) {
+}
+
+public static void Main (String [] args) {
+    // Your code goes here
+    
+}
+
+ 

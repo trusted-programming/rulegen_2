@@ -1,0 +1,6 @@
+function changeElseClause
+	replace[opt else_clause]
+		'else ElseStmts [statement]
+	by
+		'else ElseStmts[translateStatement][translateBlock]
+end function

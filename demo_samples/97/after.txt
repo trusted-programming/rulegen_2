@@ -1,0 +1,9 @@
+ switch (target) {
+    case 0 :
+        Console.WriteLine ("target is zero");
+        break;
+    case 1 :
+        Console.WriteLine ("target is one");
+        break;
+}
+ 

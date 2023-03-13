@@ -1,0 +1,26 @@
+
+public static void main (String [] args) {
+    try {
+        System.out.println ("NullPointerException example");
+        test (null);
+    } catch (NullPointerException npe) {
+    }
+    try {
+        System.out.println ("NumberFormatException example");
+        Integer inum = new Integer ("36.5");
+        // format problem
+        
+    } catch (NumberFormatException nfe) {
+    }
+    try {
+        System.out.println ("ArithmeticException Example");
+        int a = 100;
+        a /= 0;
+    } catch (ArithmeticException ae) {
+    }
+    System.out.println ("ArrayStoreException Example");
+    Integer [] a = new Integer [3];
+    storeItem (a, 2, new String ("abc"));
+}
+
+ 

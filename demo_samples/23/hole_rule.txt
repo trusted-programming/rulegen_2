@@ -1,0 +1,7 @@
+function containSuper 
+	match [constructor_body]
+	   '{
+	       'super args[repeat component] ';
+	       Remaining[repeat declaration_or_statement]
+	   '}
+end function

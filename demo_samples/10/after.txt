@@ -1,0 +1,41 @@
+ //case 1 fall through case 2, and default option has no break
+
+switch (i) {
+    case 0 :
+        Console.WriteLine ("i is zero.");
+        break;
+    case 1 :
+        Console.WriteLine ("i is one.");
+        goto case 2;
+    case 2 :
+        Console.WriteLine ("i is two.");
+        break;
+    case 3 :
+        Console.WriteLine ("i is three.");
+        break;
+    default :
+        Console.WriteLine ("i is greater than 3.");
+        break;
+}
+//valid in C# and Java
+
+switch (i) {
+    case 0 :
+    case 1 :
+    case 2 :
+    case 3 :
+    case 4 :
+        Console.WriteLine ("i is less than 5");
+        break;
+    case 5 :
+    case 6 :
+    case 7 :
+    case 8 :
+    case 9 :
+        Console.WriteLine ("i is less than 10");
+        break;
+    default :
+        Console.WriteLine ("i is 10 or more");
+        break;
+}
+ 

@@ -1,0 +1,12 @@
+
+int getLength () {
+    String s;
+    try {
+        s = readUpTo (':');
+    } catch (IOException e) {
+        return 0;
+    }
+    return s.length ();
+}
+
+ 

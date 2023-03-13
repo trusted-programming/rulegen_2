@@ -1,0 +1,6 @@
+rule transformBooleanFalse
+    replace [literal]
+	'false
+    by
+	'False 
+end rule

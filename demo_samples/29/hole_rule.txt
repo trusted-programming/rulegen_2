@@ -1,0 +1,17 @@
+function checkPrimitiveConstants
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where Modifiers[containFinal]
+	where FirstVarDecl[isCompileTime]
+	by
+		Modifiers[removeStatic][finalToConst]
+			 [removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes]
+		VarDecl ;	
+end function

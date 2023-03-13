@@ -1,0 +1,17 @@
+ int outer_x = 100;
+
+virtual public void test () {
+}
+
+// this is an inner class
+
+//J2C# NotSupported:Inner classes must be removed manually
+class Inner {
+
+    void display () {
+        System.out.println ("display: Inner class in Java ");
+    }
+
+}
+
+ 

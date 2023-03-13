@@ -1,0 +1,10 @@
+function ContainBreak
+	match[repeat declaration_or_statement]
+		Stmts[repeat declaration_or_statement]
+	construct Length[number]
+		 _[length Stmts]
+	construct LastDecStmt[repeat declaration_or_statement]
+		Stmts [tail Length]
+	deconstruct *LastDecStmt
+		breakStmt[break_statement]
+end function

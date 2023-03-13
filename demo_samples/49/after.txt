@@ -1,0 +1,5 @@
+ do {
+    a ++;
+    Console.WriteLine (a);
+} while (a < 10);
+ 

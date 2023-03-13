@@ -1,0 +1,8 @@
+function toLeft Pivot [id] N [id]
+    where 
+        N [< Pivot]
+    replace [id *] 
+        List [id *]
+    by 
+        N List
+end function

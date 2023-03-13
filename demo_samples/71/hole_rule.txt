@@ -1,0 +1,9 @@
+function addResultAssign F [id] ORS [opt returnsSpec]
+    % for each returns spec
+    deconstruct ORS
+        returns ( F , TS [typeSpec] , PN [id] ).
+    replace [functionCallSemi]
+        F ( PL [list parameterName] );
+    by
+        PN = F ( PL );
+end function

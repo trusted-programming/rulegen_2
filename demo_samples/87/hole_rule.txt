@@ -1,0 +1,4 @@
+function isVolatile
+	match [modifier]
+		'volatile
+end function
