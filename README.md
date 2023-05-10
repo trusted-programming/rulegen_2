@@ -39,10 +39,45 @@ end function
 
 Then you can check if the generated rule is aligned with the ground truth in the path ``demo_samples/1/hole_rule.txt``.
 
-# Train the model from scratch
+# Fine-tuning the model from Customer Trainer
 
 ```bash
-python3 -m torch.distributed.run --nproc_per_node=4 t5_train.py
+python3 -m torch.distributed.run --nproc_per_node=4 test_trainer/test_t5_trainer.py
 ```
 
 Please also edit the config.ini to match with your settings.
+
+## Preliminary results To Predict the Missing Rules
+
+### CodeT5
+
+| Dataset    | EM    | BLEU  |
+|------------|-------|-------|
+| 1 Rule     | 43.56 | 74.29 |
+| 2 Rule     | 34.45 | 59.25 |
+| 3 Rule     | 32.57 | 43.56 |
+| 4 Rule     | 21.69 | 30.15 |
+| All rules  | 30.68 | 46.39 |
+
+
+### CodeBERT
+
+| Dataset    | EM    | BLEU  |
+|------------|-------|-------|
+| 1 Rule     | 37.21 | 70.29 |
+| 2 Rule     | ----- | ----- |
+| 3 Rule     | ----- | ----- |
+| 4 Rule     | ----- | ----- |
+| All rules  | 27.68 | 41.23 |
+
+
+### StarCoder
+
+| Dataset    | EM    | BLEU  |
+|------------|-------|-------|
+| 1 Rule     | ----- | ----- |
+| 2 Rule     | ----- | ----- |
+| 3 Rule     | ----- | ----- |
+| 4 Rule     | ----- | ----- |
+| All rules  | ----- | ----- |
+
