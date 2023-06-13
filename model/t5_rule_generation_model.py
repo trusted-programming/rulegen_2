@@ -20,7 +20,7 @@ class T5RuleGenerationModel(nn.Module):
         self.max_source_length = max_source_length
         self.max_target_length = max_target_length
         # self.max_prediction_length = 
-       
+        self.device = t5_model.device
         self.beam_size = beam_size    
         self.cross_entropy_loss = nn.CrossEntropyLoss()
         

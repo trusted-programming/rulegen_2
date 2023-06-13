@@ -94,7 +94,7 @@ if __name__ == "__main__":
         # map_location = {'cuda:%d' % 0: 'cuda:%d' % 0}
         # model.load_state_dict(torch.load(existing_model_checkpoint,  map_location=map_location))
         # model.load_state_dict(torch.load(existing_model_checkpoint))
-        state_dict = torch.load(existing_model_checkpoint)
+        state_dict = torch.load(existing_model_checkpoint, map_location=torch.device('cpu'))
         new_state_dict = OrderedDict()
         for k, v in state_dict.items():
             name = k[7:] 
